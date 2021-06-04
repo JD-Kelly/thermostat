@@ -1,15 +1,25 @@
+'use strict';
+
 class Thermostat {
   
   constructor() {
-    this.temperature = 20;
     this.MINIMUM_TEMPERATURE = 10;
     this.powerSavingMode = true;
+    this.MAXIMUM_TEMPERATURE_PSM_ON = 25;
+    this.MAXIMUM_TEMPERATURE_PSM_OFF = 32;
+    this.DEFAULT_TEMPERATURE = 20;
+    this.temperature = this.DEFAULT_TEMPERATURE;
+    this.MEDIUM_ENERGY_USAGE_LIMIT = 18;
+    this.HIGH_ENERGY_USAGE_LIMIT = 25;
   }
   getCurrentTemperature() {
     return this.temperature;
   }
   up() {
-    return this.temperature += 1
+    if (this.isMaximumTemperature()) {
+      return;
+    }
+    this.temperature += 1
   }
   down() {
     if (this.isMinimumTemperature()) {
@@ -20,7 +30,31 @@ class Thermostat {
   isMinimumTemperature() {
     return this.temperature === this.MINIMUM_TEMPERATURE;
   }
-  isPowerSavingMode() {
+  isMaximumTemperature() {
+    if (this.isPowerSavingModeOn() === false) {
+      return this.temperature === this.MAXIMUM_TEMPERATURE_PSM_OFF;
+    }
+    return this.temperature === this.MAXIMUM_TEMPERATURE_PSM_ON;
+  }
+  isPowerSavingModeOn() {
     return this.powerSavingMode === true;
+  }
+  turnPowerSavingModeOff() {
+    return this.powerSavingMode = false;
+  }
+  turnPowerSavingModeOn() {
+    return this.powerSavingMode = true;
+  }
+  resetTemperature() {
+    this.temperature = this.DEFAULT_TEMPERATURE;
+  }
+  energyUsage() {
+    if (this.temperature < this.MEDIUM_ENERGY_USAGE_LIMIT) {
+      return 'low-usage';
+    }
+    if (this.temperature <= this.HIGH_ENERGY_USAGE_LIMIT) {
+      return 'medium-usage';
+    }
+      return 'high-usage';
   }
 }
